@@ -125,7 +125,7 @@ def send_chat(request):
             'id': chat_id
         }
         
-        response = requests.post(webhook_url, json=payload, timeout=30)
+        response = requests.post(webhook_url, json=payload, timeout=60)
         
         if response.status_code == 200:
             chat_data['chat'].append(f"User: {user_message}")
