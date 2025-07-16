@@ -13,10 +13,5 @@
     { "src": "/static/(.*)", "dest": "/static/$1" },
     { "src": "/media/(.*)", "dest": "/media/$1" },
     { "src": "/(.*)", "dest": "/manage.py" }
-  ],
-  "functions": {
-    "manage.py": {
-      "maxDuration": 30
-    }
-  }
+  ]
 } 
