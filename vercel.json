@@ -1,18 +1,13 @@
 {
   "builds": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
+      "src": "manage.py",
+      "use": "vercel-django"
     }
   ],
   "routes": [
     { "src": "/static/(.*)", "dest": "/static/$1" },
     { "src": "/media/(.*)", "dest": "/media/$1" },
-    { "src": "/(.*)", "dest": "/api/index.py" }
-  ],
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 30
-    }
-  }
+    { "src": "/(.*)", "dest": "/manage.py" }
+  ]
 } 
