@@ -2,7 +2,8 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from django.core.wsgi import get_wsgi_application
+from whitenoise import WhiteNoise
 
 def main():
     """Run administrative tasks."""
@@ -17,6 +18,12 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
+# Vercel handler
+def handler(request, context):
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'travel_avagenc.settings')
+    application = get_wsgi_application()
+    application = WhiteNoise(application, root=os.path.join(os.path.dirname(__file__), 'static'))
+    return application(request, context)
 
 if __name__ == '__main__':
     main()

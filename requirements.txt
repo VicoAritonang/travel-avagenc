@@ -3,4 +3,3 @@ gunicorn
 whitenoise
 requests
 python-dotenv
-vercel-django
