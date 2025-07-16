@@ -114,7 +114,7 @@ def send_chat(request):
             db.create_chat(chat_data)
         
         # Kirim request ke n8n webhook
-        webhook_url = 'https://n8n-elrsppnn.n8x.web.id/webhook-test/29b9ae51-f0e7-4136-aea0-d4da26667194'
+        webhook_url = 'https://n8n-elrsppnn.n8x.web.id/webhook/29b9ae51-f0e7-4136-aea0-d4da26667194'
         
         payload = {
             'nama': data['nama'],
