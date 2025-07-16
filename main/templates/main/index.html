@@ -415,6 +415,7 @@
             padding: 10px 15px;
             border-radius: 10px;
             max-width: 80%;
+            text-align: justify;
         }
         
         .message.user {
@@ -426,6 +427,7 @@
         .message.bot {
             background: #f8f9fa;
             color: #333;
+            text-align: justify;
         }
         
         .chat-input {
@@ -575,7 +577,7 @@
         .main-header {
             background: linear-gradient(90deg, #1976d2 0%, #00b4d8 100%);
             color: white;
-            padding: 40px 0 30px 0;
+            padding: 10px 0 30px 0; /* Kurangi padding atas agar alpha badge lebih naik */
             text-align: center;
             border-radius: 0 0 32px 32px;
             box-shadow: 0 8px 32px rgba(25, 118, 210, 0.08);
@@ -585,6 +587,7 @@
             font-size: 2.8rem;
             font-weight: 700;
             margin-bottom: 10px;
+            margin-top: 32px; /* Tambahkan margin atas agar judul turun */
             letter-spacing: 1px;
         }
         .main-header p {
