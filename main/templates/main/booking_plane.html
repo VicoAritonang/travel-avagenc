@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Pesawat | Travel Agent by Avagenc</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f0ff 0%, #f8fbff 100%);
+            min-height: 100vh;
+            color: #222;
+        }
+        .booking-container {
+            max-width: 540px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(25, 118, 210, 0.10);
+            padding: 32px 28px 28px 28px;
+        }
+        .booking-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #1976d2;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        .booking-section {
+            margin-bottom: 22px;
+        }
+        .booking-label {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .booking-value {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .payment-btn {
+            background: linear-gradient(90deg, #1976d2 0%, #00b4d8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .payment-btn:hover {
+            background: linear-gradient(90deg, #1565c0 0%, #0096c7 100%);
+        }
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        .summary-table td {
+            padding: 6px 0;
+        }
+        .summary-table .label {
+            color: #1976d2;
+            font-weight: 600;
+            width: 40%;
+        }
+        .summary-table .value {
+            color: #222;
+            font-weight: 400;
+        }
+        .success-msg {
+            color: #388e3c;
+            background: #e8f5e9;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 18px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-container">
+        <div class="booking-title"><i class="fas fa-plane"></i> Booking Tiket Pesawat</div>
+        <div class="booking-section">
+            <span class="booking-label">Data Pemesan</span>
+            <table class="summary-table" id="userTable"></table>
+        </div>
+        <div class="booking-section">
+            <span class="booking-label">Detail Penerbangan</span>
+            <table class="summary-table">
+                <tr><td class="label">Nama Penerbangan</td><td class="value">GA-123 (Contoh)</td></tr>
+                <tr><td class="label">Maskapai</td><td class="value">Garuda Indonesia</td></tr>
+                <tr><td class="label">Keberangkatan</td><td class="value">CGK - Soekarno Hatta</td></tr>
+                <tr><td class="label">Tujuan</td><td class="value">DPS - Ngurah Rai</td></tr>
+                <tr><td class="label">Tanggal</td><td class="value">2025-07-01</td></tr>
+                <tr><td class="label">Harga</td><td class="value">Rp 1.500.000</td></tr>
+            </table>
+        </div>
+        <div class="booking-section">
+            <span class="booking-label">Pilih Metode Pembayaran</span>
+            <div class="payment-methods">
+                <button class="payment-btn" onclick="showSuccess('Transfer Bank')"><i class="fas fa-university"></i> Transfer Bank</button>
+                <button class="payment-btn" onclick="showSuccess('Virtual Account')"><i class="fas fa-credit-card"></i> Virtual Account</button>
+                <button class="payment-btn" onclick="showSuccess('E-Wallet')"><i class="fas fa-wallet"></i> E-Wallet (OVO, GoPay, DANA)</button>
+                <button class="payment-btn" onclick="showSuccess('Kartu Kredit')"><i class="fas fa-credit-card"></i> Kartu Kredit</button>
+            </div>
+        </div>
+        <div class="success-msg" id="successMsg"></div>
+    </div>
+    <script>
+        // Ambil data user dari query string
+        function getQueryParam(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name) || '';
+        }
+        function renderUserTable() {
+            const table = document.getElementById('userTable');
+            const rows = [
+                ['Nama', getQueryParam('nama')],
+                ['Usia', getQueryParam('usia')],
+                ['NIK', getQueryParam('nik')],
+                ['Kewarganegaraan', getQueryParam('kewarganegaraan')],
+            ];
+            table.innerHTML = rows.map(r => `<tr><td class='label'>${r[0]}</td><td class='value'>${r[1]}</td></tr>`).join('');
+        }
+        renderUserTable();
+        function showSuccess(metode) {
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('successMsg').textContent = 'Pembayaran dengan ' + metode + ' berhasil! (simulasi)';
+        }
+    </script>
+</body>
+</html> 

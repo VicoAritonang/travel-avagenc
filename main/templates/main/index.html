@@ -1,0 +1,1644 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Agent by Avagenc</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f0ff 0%, #f8fbff 100%);
+            min-height: 100vh;
+            color: #222;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .user-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+        }
+        
+        .user-form h2 {
+            margin-bottom: 25px;
+            color: #667eea;
+            text-align: center;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .booking-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .booking-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .booking-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .flight-info {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .flight-details h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .flight-details p {
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            text-align: right;
+        }
+        
+        .hotel-info {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .hotel-details h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .rating {
+            color: #f39c12;
+            margin-bottom: 4px;
+        }
+        
+        .stars {
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+        
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            max-height: 450px;
+            height: 4500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .chatbot-container.open {
+            transform: translateY(0);
+            max-height: 450px;
+            height: 450px;
+        }
+        
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 60px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1001;
+            transition: all 0.3s;
+        }
+        @media (max-width: 768px) {
+            .chatbot-toggle {
+                right: 30px;
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+        .chatbot-container.maximized .chat-sidebar {
+            width: 120px;
+            min-width: 80px;
+            max-width: 140px;
+            margin-right: 16px;
+        }
+        .chat-item .chat-menu-btn {
+            right: 4px;
+            top: 50%;
+            margin-right: 0;
+        }
+        .chatbot-container.maximized .chat-item .chat-menu-btn {
+            right: 16px;
+            margin-right: 8px;
+        }
+        
+        .chatbot-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chatbot-header h3 {
+            margin: 0;
+        }
+        
+        .chatbot-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chatbot-controls button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .chatbot-controls button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .chatbot-body {
+            display: flex;
+            flex: 1 1 auto;
+            height: 100%;
+            min-height: 0;
+        }
+        
+        .chat-sidebar {
+            width: 130px;
+            background: #f8f9fa;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+        
+        .chat-history {
+            padding: 10px;
+        }
+        
+        .chat-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+            word-wrap: break-word;
+            position: relative;
+            padding-right: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
+        }
+        .chat-item span, .chat-item-title {
+            flex: 1 1 auto;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+        
+        .chat-item:hover {
+            background: #e9ecef;
+        }
+        
+        .chat-item.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .chat-item .chat-menu-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .chat-item:hover .chat-menu-btn {
+            display: block;
+        }
+        .chat-menu {
+            display: none;
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            z-index: 10;
+            min-width: 90px;
+        }
+        .chat-menu.active {
+            display: block;
+        }
+        .chat-menu-option {
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+        .chat-menu-option:hover {
+            background: #f0f0f0;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            height: 100%;
+        }
+        
+        .chat-messages {
+            flex: 1 1 auto;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 350px;
+            min-height: 0;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .message.bot {
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .chat-input button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .chat-input button:hover {
+            background: #5a6fd8;
+        }
+        
+        .chat-input button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .loading-message {
+            display: flex;
+            gap: 2px;
+            font-size: 1.5em;
+            color: #667eea;
+            background: #f8f9fa;
+            align-items: center;
+            width: fit-content;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .loading-message .dot {
+            animation: blink 1s infinite;
+            opacity: 0.3;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .booking-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chatbot-container {
+                width: 100%;
+                right: 0;
+                left: 0;
+                border-radius: 15px 15px 0 0;
+            }
+            
+            .chatbot-toggle {
+                right: 20px;
+            }
+        }
+        .chatbot-container.maximized {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            border-radius: 0 !important;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+        }
+        .chatbot-container.maximized .chatbot-body {
+            height: 100% !important;
+            min-height: 0;
+        }
+        .chatbot-container.maximized .chat-main {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .chatbot-container.maximized .chat-messages {
+            flex: 1 1 auto;
+            max-height: none;
+            min-height: 0;
+            overflow-y: auto;
+        }
+        .chatbot-container.maximized .chat-input {
+            flex: 0 0 auto;
+            padding: 20px 20px 20px 0;
+            border-top: 1px solid #ddd;
+            background: #fff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            .chatbot-container.maximized .chat-input {
+                padding: 15px 10px 15px 0;
+            }
+        }
+        .chatbot-container .fa-compress {
+            font-size: 1.2em;
+        }
+        .chatbot-container.maximized .chat-sidebar {
+            width: 200px;
+            min-width: 180px;
+            max-width: 250px;
+            margin-right: 24px;
+        }
+        @media (max-width: 768px) {
+            .chatbot-container.maximized .chat-sidebar {
+                width: 120px;
+                min-width: 80px;
+                margin-right: 8px;
+            }
+        }
+        .chatbot-container.maximized .chat-item-title {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            width: 100%;
+        }
+        .main-header {
+            background: linear-gradient(90deg, #1976d2 0%, #00b4d8 100%);
+            color: white;
+            padding: 40px 0 30px 0;
+            text-align: center;
+            border-radius: 0 0 32px 32px;
+            box-shadow: 0 8px 32px rgba(25, 118, 210, 0.08);
+            margin-bottom: 32px;
+        }
+        .main-header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .main-header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+        .search-section {
+            max-width: 1200px;
+            margin: 0 auto 32px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(25, 118, 210, 0.07);
+            padding: 32px 24px 24px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: space-between;
+        }
+        .filter-group {
+            flex: 1 1 320px;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .filter-group label {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 2px;
+        }
+        .filter-group input, .filter-group select {
+            padding: 10px 12px;
+            border: 1.5px solid #e0e7ef;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #f8fbff;
+            color: #222;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .filter-group input:focus, .filter-group select:focus {
+            border-color: #1976d2;
+        }
+        .filter-actions {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+        }
+        .filter-btn {
+            background: linear-gradient(90deg, #1976d2 0%, #00b4d8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+            transition: background 0.2s;
+        }
+        .filter-btn:hover {
+            background: linear-gradient(90deg, #1565c0 0%, #0096c7 100%);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1976d2;
+            margin-bottom: 18px;
+            margin-top: 24px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+        .ticket-card, .hotel-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(25, 118, 210, 0.07);
+            padding: 24px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .ticket-card:hover, .hotel-card:hover {
+            box-shadow: 0 8px 32px rgba(25, 118, 210, 0.13);
+            transform: translateY(-4px) scale(1.02);
+        }
+        .ticket-header, .hotel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .ticket-header i, .hotel-header i {
+            font-size: 1.6rem;
+            color: #1976d2;
+        }
+        .ticket-title, .hotel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1976d2;
+        }
+        .ticket-info, .hotel-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 32px;
+            font-size: 1rem;
+            color: #444;
+        }
+        .ticket-info span, .hotel-info span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ticket-price, .hotel-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ff9800;
+            margin-top: 8px;
+        }
+        .ticket-action, .hotel-action {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .ticket-action button, .hotel-action button {
+            background: linear-gradient(90deg, #1976d2 0%, #00b4d8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .ticket-action button:hover, .hotel-action button:hover {
+            background: linear-gradient(90deg, #1565c0 0%, #0096c7 100%);
+        }
+        .star {
+            color: #ffb300;
+            font-size: 1.1em;
+        }
+        .rating {
+            color: #1976d2;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        .empty-state {
+            text-align: center;
+            color: #aaa;
+            font-size: 1.1em;
+            margin: 32px 0;
+        }
+        @media (max-width: 900px) {
+            .search-section {
+                flex-direction: column;
+                gap: 18px;
+            }
+        }
+        @media (max-width: 600px) {
+            .main-header {
+                padding: 24px 0 18px 0;
+            }
+            .search-section {
+                padding: 18px 6px 12px 6px;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .segment-btn {
+            background: #f8fbff;
+            color: #1976d2;
+            border: 2px solid #1976d2;
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .segment-btn.active {
+            background: linear-gradient(90deg, #1976d2 0%, #00b4d8 100%);
+            color: #fff;
+        }
+        .segment-toggle {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 24px auto;
+            display: flex;
+            gap: 0;
+        }
+        .segment-btn {
+            flex: 1 1 50%;
+            border-radius: 0;
+            border: 2px solid #1976d2;
+            border-right: none;
+            margin: 0;
+            text-align: center;
+            justify-content: center;
+        }
+        .segment-btn.left-segment {
+            border-radius: 8px 0 0 8px;
+        }
+        .segment-btn.right-segment {
+            border-radius: 0 8px 8px 0;
+            border-right: 2px solid #1976d2;
+        }
+        .segment-btn i {
+            margin-right: 8px;
+        }
+        .segment-btn.active {
+            background: linear-gradient(90deg, #1976d2 0%, #00b4d8 100%);
+            color: #fff;
+        }
+        @media (max-width: 600px) {
+            .segment-toggle {
+                max-width: 100%;
+            }
+            .segment-btn {
+                font-size: 1rem;
+                padding: 10px 0;
+            }
+        }
+        .alpha-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(90deg, #ff9800 0%, #ffd600 100%);
+            color: #222;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 6px 18px;
+            border-radius: 0 0 0 16px;
+            box-shadow: 0 2px 8px rgba(255, 168, 0, 0.08);
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+        @media (max-width: 600px) {
+            .alpha-badge {
+                font-size: 0.85rem;
+                padding: 5px 10px;
+                border-radius: 0 0 0 10px;
+            }
+        }
+        /* Kartu chat pesawat/hotel lebih kecil di mode minimize */
+        .chatbot-container:not(.maximized) .chat-card-group {
+            max-width: 320px;
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .chatbot-container:not(.maximized) .chat-card {
+            max-width: 320px;
+            width: 100%;
+            font-size: 0.92em;
+            padding: 10px 10px;
+        }
+        .chatbot-container:not(.maximized) .chat-card .chat-card-pesawat,
+        .chatbot-container:not(.maximized) .chat-card .chat-card-hotel {
+            font-size: 0.92em;
+        }
+        .chatbot-container:not(.maximized) .chat-card div[style*="font-size:1.08em"] {
+            font-size: 1em !important;
+        }
+        .chatbot-container:not(.maximized) .chat-card div[style*="font-size:1.13em"] {
+            font-size: 1em !important;
+        }
+        @media (max-width: 500px) {
+            .chatbot-container:not(.maximized) .chat-card-group,
+            .chatbot-container:not(.maximized) .chat-card {
+                max-width: 98vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-header">
+        <div style="position:relative;">
+            <span class="alpha-badge">Alpha Version</span>
+            <h1 style="margin-top:0;"><i class="fas fa-plane-departure"></i> Travel Agent by Avagenc</h1>
+            <p>Diskusikan rencana perjalananmu bersama AI Agent</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="user-form" style="margin-bottom: 28px;">
+            <h2><i class="fas fa-user"></i> Data Pengguna</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap">
+                </div>
+                <div class="form-group">
+                    <label for="usia">Usia</label>
+                    <input type="number" id="usia" name="usia" placeholder="Masukkan usia">
+                </div>
+                <div class="form-group">
+                    <label for="nik">NIK</label>
+                    <input type="text" id="nik" name="nik" placeholder="Masukkan NIK">
+                </div>
+                <div class="form-group">
+                    <label for="kewarganegaraan">Kewarganegaraan</label>
+                    <input type="text" id="kewarganegaraan" name="kewarganegaraan" placeholder="Masukkan kewarganegaraan">
+                </div>
+            </div>
+        </div>
+        <div class="segment-toggle" style="display:flex; gap:0; justify-content:center; margin-bottom:24px;">
+            <button id="togglePesawat" class="segment-btn active left-segment"><i class="fas fa-plane"></i> Pesawat</button>
+            <button id="toggleHotel" class="segment-btn right-segment"><i class="fas fa-bed"></i> Hotel</button>
+        </div>
+    </div>
+    <div class="search-section">
+        <form id="flightFilterForm" class="filter-group segment-pesawat" onsubmit="event.preventDefault(); filterFlights();">
+            <label>Asal</label>
+            <input type="text" id="filterAsal" placeholder="Bandara asal">
+            <label>Tujuan</label>
+            <input type="text" id="filterTujuan" placeholder="Bandara tujuan">
+            <label>Tanggal</label>
+            <input type="date" id="filterTanggal">
+            <label>Maskapai</label>
+            <select id="filterMaskapai">
+                <option value="">Semua Maskapai</option>
+            </select>
+            <label>Harga Maksimal</label>
+            <input type="range" id="filterHargaPesawat" min="0" max="10000000" step="50000" value="10000000" oninput="document.getElementById('hargaPesawatVal').textContent = 'Rp ' + parseInt(this.value).toLocaleString();">
+            <span id="hargaPesawatVal" style="font-size:0.95em; color:#1976d2;">Rp 10.000.000</span>
+            <div class="filter-actions">
+                <button class="filter-btn" type="submit"><i class="fas fa-search"></i> Cari Tiket</button>
+            </div>
+        </form>
+        <form id="hotelFilterForm" class="filter-group segment-hotel" onsubmit="event.preventDefault(); filterHotels();" style="display:none;">
+            <label>Kota / Tujuan</label>
+            <input type="text" id="filterKota" placeholder="Kota atau tujuan hotel">
+            <label>Tanggal Check-in</label>
+            <input type="date" id="filterCheckin">
+            <label>Tanggal Check-out</label>
+            <input type="date" id="filterCheckout">
+            <label>Bintang</label>
+            <select id="filterBintang">
+                <option value="">Semua</option>
+                <option value="5">★★★★★</option>
+                <option value="4">★★★★</option>
+                <option value="3">★★★</option>
+                <option value="2">★★</option>
+                <option value="1">★</option>
+            </select>
+            <label>Harga Maksimal</label>
+            <input type="range" id="filterHargaHotel" min="0" max="10000000" step="50000" value="10000000" oninput="document.getElementById('hargaHotelVal').textContent = 'Rp ' + parseInt(this.value).toLocaleString();">
+            <span id="hargaHotelVal" style="font-size:0.95em; color:#1976d2;">Rp 10.000.000</span>
+            <div class="filter-actions">
+                <button class="filter-btn" type="submit"><i class="fas fa-search"></i> Cari Hotel</button>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <div class="section-title segment-pesawat"> <i class="fas fa-plane"></i> Tiket Pesawat</div>
+        <div id="flightGrid" class="card-grid segment-pesawat"></div>
+        <div class="section-title segment-hotel" style="display:none;"> <i class="fas fa-bed"></i> Hotel</div>
+        <div id="hotelGrid" class="card-grid segment-hotel" style="display:none;"></div>
+    </div>
+    
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" id="chatbotToggle">
+        <i class="fas fa-chevron-up" id="toggleIcon"></i>
+    </button>
+    
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <h3><i class="fas fa-robot"></i> Kora AI</h3>
+            <div class="chatbot-controls">
+                <button id="newChatBtn" title="Chat Baru">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="deleteChatBtn" title="Hapus Chat">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button id="maximizeBtn" title="Perbesar" style="margin-left:8px;">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chatbot-body">
+            <div class="chat-sidebar">
+                <div class="chat-history" id="chatHistory">
+                    <!-- Chat history akan dimuat di sini -->
+                </div>
+            </div>
+            <div class="chat-main">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        Halo! Saya adalah Kora AI. Saya siap membantu Anda merencanakan perjalanan. Silakan tanyakan apa saja tentang penerbangan, hotel, atau destinasi wisata!
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Ketik pesan Anda...">
+                    <button id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Chatbot functionality
+        let currentChatId = null;
+        let chatbotOpen = false;
+        
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatHistory = document.getElementById('chatHistory');
+        const newChatBtn = document.getElementById('newChatBtn');
+        const deleteChatBtn = document.getElementById('deleteChatBtn');
+        const maximizeBtn = document.getElementById('maximizeBtn');
+        let isMaximized = false;
+        
+        // Toggle chatbot
+        chatbotToggle.addEventListener('click', () => {
+            chatbotOpen = !chatbotOpen;
+            if (chatbotOpen) {
+                chatbotContainer.classList.add('open');
+                toggleIcon.className = 'fas fa-chevron-down';
+                loadChatHistory();
+            } else {
+                chatbotContainer.classList.remove('open');
+                toggleIcon.className = 'fas fa-chevron-up';
+            }
+        });
+        
+        // Send message
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Validasi data pengguna
+            const nama = document.getElementById('nama').value.trim();
+            const usia = document.getElementById('usia').value.trim();
+            const nik = document.getElementById('nik').value.trim();
+            const kewarganegaraan = document.getElementById('kewarganegaraan').value.trim();
+            
+            if (!nama || !usia || !nik || !kewarganegaraan) {
+                alert('Harap lengkapi data pengguna terlebih dahulu!');
+                return;
+            }
+            
+            // Jika belum ada chat aktif, buat chat baru
+            if (!currentChatId) {
+                await createNewChat();
+            }
+            
+            // Tampilkan pesan user
+            addMessage(message, 'user');
+            // Tambahkan animasi loading
+            addLoadingMessage();
+            messageInput.value = '';
+            sendBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/send-chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nama: nama,
+                        usia: usia,
+                        nik: nik,
+                        kewarganegaraan: kewarganegaraan,
+                        chat: message,
+                        id: currentChatId
+                    })
+                });
+                const data = await response.json();
+                removeLoadingMessage();
+                // console.log('Response dari n8n:', data); // LOG RESPONSE
+                if (data.success) {
+                    let output = data.response;
+                    let pesawat = null;
+                    let hotel = null;
+                    // Jika output adalah array (legacy), ambil elemen pertama
+                    if (Array.isArray(output) && output.length > 0) {
+                        output = output[0];
+                    }
+                    // Sekarang output pasti object
+                    if (output && typeof output === 'object') {
+                        pesawat = output.pesawat;
+                        hotel = output.hotel;
+                        if (typeof pesawat === 'string') {
+                            try { pesawat = JSON.parse(pesawat); } catch (e) {}
+                        }
+                        if (typeof hotel === 'string') {
+                            try { hotel = JSON.parse(hotel); } catch (e) {}
+                        }
+                        // console.log('Pesawat setelah parse:', pesawat);
+                        // console.log('Hotel setelah parse:', hotel);
+                        output = output.output;
+                    }
+                    addMessage(output, 'bot', pesawat, hotel);
+                } else {
+                    addMessage('Maaf, terjadi kesalahan: ' + data.error, 'bot');
+                }
+            } catch (error) {
+                removeLoadingMessage();
+                addMessage('Maaf, terjadi kesalahan koneksi.', 'bot');
+            }
+            
+            sendBtn.disabled = false;
+        }
+        
+        function addMessage(message, type, pesawatList = null, hotelList = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            // Jika ada kartu pesawat/hotel, render setelah bubble
+            if (type === 'bot') {
+                if (pesawatList && Array.isArray(pesawatList) && pesawatList.length) {
+                    const pesawatCards = document.createElement('div');
+                    pesawatCards.innerHTML = renderChatCards('pesawat', pesawatList);
+                    chatMessages.appendChild(pesawatCards);
+                }
+                if (hotelList && Array.isArray(hotelList) && hotelList.length) {
+                    const hotelCards = document.createElement('div');
+                    hotelCards.innerHTML = renderChatCards('hotel', hotelList);
+                    chatMessages.appendChild(hotelCards);
+                }
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Tambahkan fungsi animasi loading
+        function addLoadingMessage() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot loading-message';
+            loadingDiv.innerHTML = '<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            animateDots(loadingDiv);
+        }
+        function removeLoadingMessage() {
+            const loadingDiv = chatMessages.querySelector('.loading-message');
+            if (loadingDiv) {
+                chatMessages.removeChild(loadingDiv);
+            }
+        }
+        function animateDots(loadingDiv) {
+            const dots = loadingDiv.querySelectorAll('.dot');
+            let step = 0;
+            loadingDiv._interval = setInterval(() => {
+                dots.forEach((dot, idx) => {
+                    dot.style.opacity = (idx === step % 3) ? '1' : '0.3';
+                });
+                step++;
+            }, 400);
+        }
+        // Hentikan animasi jika loading dihapus
+        const observer = new MutationObserver(() => {
+            const loadingDiv = chatMessages.querySelector('.loading-message');
+            if (!loadingDiv && chatMessages._interval) {
+                clearInterval(chatMessages._interval);
+                chatMessages._interval = null;
+            }
+        });
+        observer.observe(chatMessages, { childList: true });
+        
+        async function createNewChat() {
+            try {
+                const response = await fetch('/new-chat/', {
+                    method: 'POST',
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentChatId = data.chat_id;
+                    chatMessages.innerHTML = '<div class="message bot">Halo! Saya adalah Kora AI. Saya siap membantu Anda merencanakan perjalanan. Silakan tanyakan apa saja tentang penerbangan, hotel, atau destinasi wisata!</div>';
+                    loadChatHistory();
+                }
+            } catch (error) {
+                console.error('Error creating new chat:', error);
+            }
+        }
+        
+        async function loadChatHistory() {
+            try {
+                const response = await fetch('/chat-history/');
+                const data = await response.json();
+                
+                if (data.success) {
+                    chatHistory.innerHTML = '';
+                    data.chats.forEach(chat => {
+                        const chatItem = document.createElement('div');
+                        chatItem.className = 'chat-item';
+                        if (chat.id === currentChatId) {
+                            chatItem.classList.add('active');
+                        }
+                        const chatTitle = document.createElement('span');
+                        chatTitle.className = 'chat-item-title';
+                        chatTitle.textContent = chat.title;
+                        chatItem.appendChild(chatTitle);
+                        chatItem.onclick = (e) => {
+                            // Hindari klik jika menu dibuka
+                            if (e.target.classList.contains('chat-menu-btn') || e.target.classList.contains('fa-ellipsis-h')) return;
+                            loadChatDetail(chat.id);
+                        };
+                        // Tombol tiga titik
+                        const menuBtn = document.createElement('button');
+                        menuBtn.className = 'chat-menu-btn';
+                        menuBtn.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
+                        chatItem.appendChild(menuBtn);
+                        // Menu popup
+                        const menu = document.createElement('div');
+                        menu.className = 'chat-menu';
+                        // Opsi Rename
+                        const renameBtn = document.createElement('button');
+                        renameBtn.className = 'chat-menu-option';
+                        renameBtn.textContent = 'Rename';
+                        renameBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            menu.classList.remove('active');
+                            const newTitle = prompt('Masukkan nama chat baru:', chat.title);
+                            if (newTitle && newTitle.trim() && newTitle !== chat.title) {
+                                renameChat(chat.id, newTitle.trim());
+                            }
+                        };
+                        // Opsi Delete
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'chat-menu-option';
+                        deleteBtn.textContent = 'Delete';
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            menu.classList.remove('active');
+                            if (confirm('Yakin ingin menghapus chat ini?')) {
+                                deleteChatById(chat.id);
+                            }
+                        };
+                        menu.appendChild(renameBtn);
+                        menu.appendChild(deleteBtn);
+                        chatItem.appendChild(menu);
+                        // Tampilkan menu saat klik tiga titik
+                        menuBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            // Tutup menu lain
+                            document.querySelectorAll('.chat-menu').forEach(m => m.classList.remove('active'));
+                            menu.classList.toggle('active');
+                        };
+                        // Tutup menu jika klik di luar
+                        document.addEventListener('click', (e) => {
+                            if (!chatItem.contains(e.target)) {
+                                menu.classList.remove('active');
+                            }
+                        });
+                        chatHistory.appendChild(chatItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading chat history:', error);
+            }
+        }
+        
+        async function loadChatDetail(chatId) {
+            try {
+                const response = await fetch(`/chat-detail/${chatId}/`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentChatId = chatId;
+                    chatMessages.innerHTML = '';
+                    
+                    data.chat.chat.forEach(message => {
+                        // Pesan user
+                        if (message.startsWith('User: ')) {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'message user';
+                            messageDiv.textContent = message.substring(6);
+                            chatMessages.appendChild(messageDiv);
+                        } else if (message.startsWith('Bot: ')) {
+                            let botContent = message.substring(5);
+                            let pesawat = null;
+                            let hotel = null;
+                            let output = botContent;
+                            // Coba parse JSON
+                            let isJson = false;
+                            try {
+                                const parsed = JSON.parse(botContent);
+                                isJson = true;
+                                pesawat = parsed.pesawat;
+                                hotel = parsed.hotel;
+                                if (typeof pesawat === 'string') {
+                                    try { pesawat = JSON.parse(pesawat); } catch (e) {}
+                                }
+                                if (typeof hotel === 'string') {
+                                    try { hotel = JSON.parse(hotel); } catch (e) {}
+                                }
+                                output = parsed.output || '';
+                            } catch (e) {
+                                // Bukan JSON, tampilkan sebagai teks biasa
+                            }
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'message bot';
+                            messageDiv.textContent = output;
+                            chatMessages.appendChild(messageDiv);
+                            // Jika ada kartu, render juga
+                            if (isJson) {
+                                if (pesawat && Array.isArray(pesawat) && pesawat.length) {
+                                    const pesawatCards = document.createElement('div');
+                                    pesawatCards.innerHTML = renderChatCards('pesawat', pesawat);
+                                    chatMessages.appendChild(pesawatCards);
+                                }
+                                if (hotel && Array.isArray(hotel) && hotel.length) {
+                                    const hotelCards = document.createElement('div');
+                                    hotelCards.innerHTML = renderChatCards('hotel', hotel);
+                                    chatMessages.appendChild(hotelCards);
+                                }
+                            }
+                        }
+                    });
+                    
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Update active chat in sidebar
+                    document.querySelectorAll('.chat-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // Find the clicked chat item and make it active
+                    document.querySelectorAll('.chat-item').forEach(item => {
+                        if (item.querySelector('.chat-item-title').textContent === data.chat.title) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading chat detail:', error);
+            }
+        }
+        
+        // Fungsi untuk rename chat
+        async function renameChat(chatId, newTitle) {
+            try {
+                const response = await fetch('/rename-chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        new_title: newTitle
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Reload chat history untuk memperbarui tampilan
+                    loadChatHistory();
+                    
+                    // Jika chat yang di-rename adalah chat aktif, update currentChatId
+                    if (currentChatId === chatId) {
+                        // Update title di chat messages jika perlu
+                        console.log('Chat berhasil di-rename');
+                    }
+                } else {
+                    alert('Gagal mengubah nama chat: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error renaming chat:', error);
+                alert('Terjadi kesalahan saat mengubah nama chat.');
+            }
+        }
+        
+        // Fungsi untuk delete chat by ID
+        async function deleteChatById(chatId) {
+            try {
+                const response = await fetch('/delete-chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Jika chat yang dihapus adalah chat aktif, reset currentChatId
+                    if (currentChatId === chatId) {
+                        currentChatId = null;
+                        chatMessages.innerHTML = '<div class="message bot">Halo! Saya adalah Kora AI. Saya siap membantu Anda merencanakan perjalanan. Silakan tanyakan apa saja tentang penerbangan, hotel, atau destinasi wisata!</div>';
+                    }
+                    
+                    // Reload chat history
+                    loadChatHistory();
+                } else {
+                    alert('Gagal menghapus chat: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error deleting chat:', error);
+                alert('Terjadi kesalahan saat menghapus chat.');
+            }
+        }
+        
+        // New chat button
+        newChatBtn.addEventListener('click', async () => {
+            await createNewChat();
+        });
+        
+        // Delete chat button
+        deleteChatBtn.addEventListener('click', async () => {
+            if (!currentChatId) {
+                alert('Tidak ada chat yang dipilih untuk dihapus.');
+                return;
+            }
+            
+            if (confirm('Apakah Anda yakin ingin menghapus chat ini?')) {
+                try {
+                    const response = await fetch('/delete-chat/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chat_id: currentChatId
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        currentChatId = null;
+                        chatMessages.innerHTML = '<div class="message bot">Halo! Saya adalah Kora AI. Saya siap membantu Anda merencanakan perjalanan. Silakan tanyakan apa saja tentang penerbangan, hotel, atau destinasi wisata!</div>';
+                        loadChatHistory();
+                    } else {
+                        alert('Gagal menghapus chat: ' + data.error);
+                    }
+                } catch (error) {
+                    alert('Terjadi kesalahan saat menghapus chat.');
+                }
+            }
+        });
+        
+        // Maximize/Minimize chatbot
+        maximizeBtn.addEventListener('click', () => {
+            isMaximized = !isMaximized;
+            chatbotContainer.classList.toggle('maximized', isMaximized);
+            const icon = maximizeBtn.querySelector('i');
+            if (isMaximized) {
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+                maximizeBtn.title = 'Kecilkan';
+            } else {
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+                maximizeBtn.title = 'Perbesar';
+            }
+        });
+        
+        // Load chat history when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-create first chat if needed
+            setTimeout(() => {
+                if (chatbotOpen) {
+                    loadChatHistory();
+                }
+            }, 500);
+        });
+        
+        // Form validation styling
+        const formInputs = document.querySelectorAll('.form-group input');
+        formInputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                if (input.value.trim()) {
+                    input.style.borderColor = '#28a745';
+                } else {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+        });
+        
+        // Smooth animations
+        const items = document.querySelectorAll('.item');
+        items.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                item.style.transition = 'all 0.5s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Data pesawat dan hotel dari context Django
+        const pesawatList = {{ pesawat_list|safe }};
+        const hotelList = {{ hotel_list|safe }};
+
+        // Helper untuk unique maskapai
+        function getUniqueMaskapai(list) {
+            const set = new Set();
+            list.forEach(p => {
+                if (p.maskapai_penerbangan) {
+                    set.add(p.maskapai_penerbangan);
+                }
+            });
+            return Array.from(set);
+        }
+        // Render maskapai ke filter
+        function renderMaskapaiOptions() {
+            const select = document.getElementById('filterMaskapai');
+            const maskapai = getUniqueMaskapai(pesawatList);
+            maskapai.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                select.appendChild(opt);
+            });
+        }
+        renderMaskapaiOptions();
+        // Render pesawat
+        function renderFlights(list) {
+            const grid = document.getElementById('flightGrid');
+            grid.innerHTML = '';
+            if (!list.length) {
+                grid.innerHTML = '<div class="empty-state">Tidak ada tiket pesawat ditemukan.</div>';
+                return;
+            }
+            list.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'ticket-card';
+                card.innerHTML = `
+                    <div class="ticket-header">
+                        <i class="fas fa-plane"></i>
+                        <div class="ticket-title">${p.nama_penerbangan || ''} - ${p.maskapai_penerbangan || ''}</div>
+                    </div>
+                    <div class="ticket-info">
+                        <span><i class="fas fa-map-marker-alt"></i> ${p.bandara_berangkat || ''} → ${p.bandara_tiba || ''}</span>
+                        <span><i class="fas fa-clock"></i> ${p.waktu_keberangkatan ? p.waktu_keberangkatan.split('T')[0] : ''} (${p.durasi_penerbangan || 0} menit)</span>
+                    </div>
+                    <div class="ticket-price">Rp ${parseInt(p.harga_tiket || 0).toLocaleString()}</div>
+                    <div class="ticket-action"><button onclick="goToBooking('plane', '${p.id}')">Pesan</button></div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        // Render hotel
+        function renderHotels(list) {
+            const grid = document.getElementById('hotelGrid');
+            grid.innerHTML = '';
+            if (!list.length) {
+                grid.innerHTML = '<div class="empty-state">Tidak ada hotel ditemukan.</div>';
+                return;
+            }
+            list.forEach(h => {
+                const card = document.createElement('div');
+                card.className = 'hotel-card';
+                card.innerHTML = `
+                    <div class="hotel-header">
+                        <i class="fas fa-hotel"></i>
+                        <div class="hotel-title">${h.nama_hotel || ''}</div>
+                    </div>
+                    <div class="hotel-info">
+                        <span><i class="fas fa-calendar"></i> ${h.waktu_tersedia || ''}</span>
+                        <span><i class="fas fa-star star"></i> ${'★'.repeat(h.bintang || 0)}${'☆'.repeat(5-(h.bintang || 0))}</span>
+                        <span class="rating"><i class="fas fa-thumbs-up"></i> ${h.rating || 0}/100</span>
+                    </div>
+                    <div class="hotel-price">Rp ${parseInt(h.harga_per_malam || 0).toLocaleString()}/malam</div>
+                    <div class="hotel-action"><button onclick="goToBooking('hotel', '${h.id}')">Pesan</button></div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        function goToBooking(type, id) {
+            // Ambil data user
+            const nama = document.getElementById('nama').value.trim();
+            const usia = document.getElementById('usia').value.trim();
+            const nik = document.getElementById('nik').value.trim();
+            const kewarganegaraan = document.getElementById('kewarganegaraan').value.trim();
+            if (!nama || !usia || !nik || !kewarganegaraan) {
+                alert('Harap lengkapi data pengguna terlebih dahulu!');
+                return;
+            }
+            const params = new URLSearchParams({ nama, usia, nik, kewarganegaraan }).toString();
+            if (type === 'plane') {
+                window.location.href = `/book_plane/${id}?${params}`;
+            } else {
+                window.location.href = `/book_hotel/${id}?${params}`;
+            }
+        }
+        // Filtering pesawat
+        function filterFlights() {
+            const asal = document.getElementById('filterAsal').value.toLowerCase();
+            const tujuan = document.getElementById('filterTujuan').value.toLowerCase();
+            const tanggal = document.getElementById('filterTanggal').value;
+            const maskapai = document.getElementById('filterMaskapai').value;
+            const hargaMax = parseInt(document.getElementById('filterHargaPesawat').value);
+            let filtered = pesawatList.filter(p => {
+                let ok = true;
+                if (asal && !(p.bandara_berangkat || '').toLowerCase().includes(asal)) ok = false;
+                if (tujuan && !(p.bandara_tiba || '').toLowerCase().includes(tujuan)) ok = false;
+                if (tanggal && p.waktu_keberangkatan && !p.waktu_keberangkatan.startsWith(tanggal)) ok = false;
+                if (maskapai && (p.maskapai_penerbangan || '') !== maskapai) ok = false;
+                if ((p.harga_tiket || 0) > hargaMax) ok = false;
+                return ok;
+            });
+            renderFlights(filtered);
+        }
+        // Filtering hotel
+        function filterHotels() {
+            const kota = document.getElementById('filterKota').value.toLowerCase();
+            const checkin = document.getElementById('filterCheckin').value;
+            const checkout = document.getElementById('filterCheckout').value;
+            const bintang = document.getElementById('filterBintang').value;
+            const hargaMax = parseInt(document.getElementById('filterHargaHotel').value);
+            let filtered = hotelList.filter(h => {
+                let ok = true;
+                if (kota && !(h.nama_hotel || '').toLowerCase().includes(kota)) ok = false;
+                if (bintang && (h.bintang || 0) != bintang) ok = false;
+                if ((h.harga_per_malam || 0) > hargaMax) ok = false;
+                // Tanggal checkin/checkout hanya filter visual, tidak validasi range
+                return ok;
+            });
+            renderHotels(filtered);
+        }
+        // Inisialisasi awal
+        renderFlights(pesawatList);
+        renderHotels(hotelList);
+
+        // Toggle segmen pesawat/hotel
+        document.getElementById('togglePesawat').onclick = function() {
+            this.classList.add('active');
+            document.getElementById('toggleHotel').classList.remove('active');
+            document.querySelectorAll('.segment-pesawat').forEach(e => e.style.display = '');
+            document.querySelectorAll('.segment-hotel').forEach(e => e.style.display = 'none');
+        };
+        document.getElementById('toggleHotel').onclick = function() {
+            this.classList.add('active');
+            document.getElementById('togglePesawat').classList.remove('active');
+            document.querySelectorAll('.segment-hotel').forEach(e => e.style.display = '');
+            document.querySelectorAll('.segment-pesawat').forEach(e => e.style.display = 'none');
+        };
+
+        // Tambahkan fungsi untuk membuat kartu pesawat/hotel di chat
+        function renderChatCards(type, items) {
+            if (!Array.isArray(items) || !items.length) return '';
+            let html = '';
+            if (type === 'pesawat') {
+                html += '<div class="chat-card-group pesawat-group" style="margin:10px 0 0 0;">';
+                html += '<div style="font-weight:600;color:#1976d2;margin-bottom:6px;">Rekomendasi Tiket Pesawat:</div>';
+                items.forEach(p => {
+                    html += `<div class="chat-card chat-card-pesawat" style="display:flex;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:10px;box-shadow:0 2px 10px rgba(25,118,210,0.08);cursor:pointer;transition:box-shadow 0.2s,border 0.2s;border:1.5px solid #e3eaf7;" onclick="goToBooking('plane','${p.id}')" onmouseover="this.style.boxShadow='0 4px 16px rgba(25,118,210,0.13)';this.style.borderColor='#1976d2'" onmouseout="this.style.boxShadow='0 2px 10px rgba(25,118,210,0.08)';this.style.borderColor='#e3eaf7'">
+                        <div style=\"flex:1;min-width:0;\">
+                            <div style=\"font-weight:600;font-size:1.08em;color:#1976d2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">${p.nama_penerbangan || ''} - ${p.maskapai_penerbangan || ''}</div>
+                            <div style=\"font-size:0.97em;color:#444;margin-top:2px;\"><i class='fas fa-clock'></i> ${p.waktu_keberangkatan ? p.waktu_keberangkatan.split(' ')[0] : ''}</div>
+                        </div>
+                        <div style=\"font-weight:700;color:#e74c3c;font-size:1.13em;margin-top:6px;text-align:left;\">Rp ${parseInt(p.harga_tiket || 0).toLocaleString()}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            } else if (type === 'hotel') {
+                html += '<div class="chat-card-group hotel-group" style="margin:10px 0 0 0;">';
+                html += '<div style="font-weight:600;color:#1976d2;margin-bottom:6px;">Rekomendasi Hotel:</div>';
+                items.forEach(h => {
+                    html += `<div class="chat-card chat-card-hotel" style="display:flex;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:10px;box-shadow:0 2px 10px rgba(25,118,210,0.08);cursor:pointer;transition:box-shadow 0.2s,border 0.2s;border:1.5px solid #e3eaf7;" onclick="goToBooking('hotel','${h.id}')" onmouseover="this.style.boxShadow='0 4px 16px rgba(25,118,210,0.13)';this.style.borderColor='#1976d2'" onmouseout="this.style.boxShadow='0 2px 10px rgba(25,118,210,0.08)';this.style.borderColor='#e3eaf7'">
+                        <div style=\"flex:1;min-width:0;\">
+                            <div style=\"font-weight:600;font-size:1.08em;color:#1976d2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">${h.nama_hotel || ''}</div>
+                        </div>
+                        <div style=\"font-weight:700;color:#ff9800;font-size:1.13em;margin-top:6px;text-align:left;\">Rp ${parseInt(h.harga_per_malam || 0).toLocaleString()}/malam</div>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+            return html;
+        }
+    </script>
+</body>
+</html>
